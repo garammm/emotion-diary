@@ -8,6 +8,7 @@ import {
 import { auth } from "../firebase-config";
 import MyButton from "../components/MyButton";
 import { useNavigate } from "react-router-dom";
+import styled from "@emotion/styled";
 
 export default function Login() {
   const [registerEmail, setRegisterEmail] = useState("");
@@ -53,10 +54,10 @@ export default function Login() {
   };
 
   return (
-    <div>
+    <Container>
       <div>
         <h3> 로그인</h3>
-        아이디
+        <Label>아이디</Label>
         <input
           placeholder="Email..."
           onChange={(event) => {
@@ -64,21 +65,37 @@ export default function Login() {
           }}
         />
         <br></br>
-        비번
+        <br></br>
+        <Label>비번</Label>
         <input
           placeholder="Password..."
           onChange={(event) => {
             setLoginPassword(event.target.value);
           }}
         />
-        <MyButton text="로그인" onClick={login} />
       </div>
+      <br></br>
+      <MyButton text="로그인" onClick={login} />
+
       <h3> 회원가입 </h3>
       {user?.email}
       <MyButton text={"회원가입"} onClick={() => navigate("/SignUp")} />
       <h3> 로그 아웃 </h3>
       {user?.email}
-      <button onClick={logout}> 로그 아웃 </button>
-    </div>
+      <MyButton text={"로그아웃"} onClick={logout} />
+    </Container>
   );
 }
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const Label = styled.label`
+  font-sie: 13px;
+  display: block;
+  color: #999;
+  margin-bottom: 4px;
+`;
