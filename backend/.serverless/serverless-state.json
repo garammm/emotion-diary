@@ -195,7 +195,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/backend/dev/1683639939050-2023-05-09T13:45:39.050Z/backend.zip"
+                "S3Key": "serverless/backend/dev/1683642211421-2023-05-09T14:23:31.421Z/backend.zip"
               },
               "Handler": "handler.readPost",
               "Runtime": "nodejs16.x",
@@ -225,7 +225,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/backend/dev/1683639939050-2023-05-09T13:45:39.050Z/backend.zip"
+                "S3Key": "serverless/backend/dev/1683642211421-2023-05-09T14:23:31.421Z/backend.zip"
               },
               "Handler": "handler.uploadPost",
               "Runtime": "nodejs16.x",
@@ -243,24 +243,24 @@
               "UploadPostLogGroup"
             ]
           },
-          "UploadPostLambdaVersionpPXe7cLHJWlcpvrDXVOYBl8xdYrrK5xULZLkUiIp4": {
+          "UploadPostLambdaVersionKM2ieu0VtPKKcfzyvDsYU407TFH1RYhhsQouHZwtnU": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "UploadPostLambdaFunction"
               },
-              "CodeSha256": "vj6HDwkm1zygm/PB58YZEmDg/b+A5+S9E/qLAEsxJIE="
+              "CodeSha256": "X0OjPbHlj1wg9yZjM30Y9M3IsEK7hmQ4U+/cVszhSbQ="
             }
           },
-          "ReadPostLambdaVersion64ib6lohd7axATFEmgcYQ8BZ0GQBjoaSKRjdNXcwTj4": {
+          "ReadPostLambdaVersionhcpOzZOg40JfLI2qJTX9pe3qBBzBUg2nmpzIIWJ1Y": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "ReadPostLambdaFunction"
               },
-              "CodeSha256": "vj6HDwkm1zygm/PB58YZEmDg/b+A5+S9E/qLAEsxJIE="
+              "CodeSha256": "X0OjPbHlj1wg9yZjM30Y9M3IsEK7hmQ4U+/cVszhSbQ="
             }
           },
           "ApiGatewayRestApi": {
@@ -421,7 +421,7 @@
               "UploadPostLambdaPermissionApiGateway"
             ]
           },
-          "ApiGatewayDeployment1683639936544": {
+          "ApiGatewayDeployment1683642207030": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -545,7 +545,7 @@
           "UploadPostLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "UploadPostLambdaVersionpPXe7cLHJWlcpvrDXVOYBl8xdYrrK5xULZLkUiIp4"
+              "Ref": "UploadPostLambdaVersionKM2ieu0VtPKKcfzyvDsYU407TFH1RYhhsQouHZwtnU"
             },
             "Export": {
               "Name": "sls-backend-dev-UploadPostLambdaFunctionQualifiedArn"
@@ -554,7 +554,7 @@
           "ReadPostLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "ReadPostLambdaVersion64ib6lohd7axATFEmgcYQ8BZ0GQBjoaSKRjdNXcwTj4"
+              "Ref": "ReadPostLambdaVersionhcpOzZOg40JfLI2qJTX9pe3qBBzBUg2nmpzIIWJ1Y"
             },
             "Export": {
               "Name": "sls-backend-dev-ReadPostLambdaFunctionQualifiedArn"
@@ -711,7 +711,7 @@
         "timeout": 6,
         "runtime": "nodejs16.x",
         "vpc": {},
-        "versionLogicalId": "ReadPostLambdaVersion64ib6lohd7axATFEmgcYQ8BZ0GQBjoaSKRjdNXcwTj4"
+        "versionLogicalId": "ReadPostLambdaVersionhcpOzZOg40JfLI2qJTX9pe3qBBzBUg2nmpzIIWJ1Y"
       },
       "uploadPost": {
         "handler": "handler.uploadPost",
@@ -747,7 +747,7 @@
         "timeout": 6,
         "runtime": "nodejs16.x",
         "vpc": {},
-        "versionLogicalId": "UploadPostLambdaVersionpPXe7cLHJWlcpvrDXVOYBl8xdYrrK5xULZLkUiIp4"
+        "versionLogicalId": "UploadPostLambdaVersionKM2ieu0VtPKKcfzyvDsYU407TFH1RYhhsQouHZwtnU"
       }
     },
     "configValidationMode": "warn",
@@ -755,12 +755,6 @@
     "initialServerlessConfig": {
       "service": "backend",
       "frameworkVersion": "3",
-      "provider": {
-        "$ref": "$[\"service\"][\"provider\"]"
-      },
-      "functions": {
-        "$ref": "$[\"service\"][\"functions\"]"
-      },
       "layers": {
         "commonLibs": {
           "path": "layer",
@@ -769,8 +763,15 @@
           },
           "package": {
             "artifact": "/Users/yugaram/Downloads/emotion_Diary-main/backend/.serverless/commonLibs.zip"
-          }
+          },
+          "artifactAlreadyUploaded": true
         }
+      },
+      "provider": {
+        "$ref": "$[\"service\"][\"provider\"]"
+      },
+      "functions": {
+        "$ref": "$[\"service\"][\"functions\"]"
       }
     },
     "layers": {
@@ -780,7 +781,7 @@
     "artifact": "/Users/yugaram/Downloads/emotion_Diary-main/backend/.serverless/backend.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/backend/dev/1683639939050-2023-05-09T13:45:39.050Z",
+    "artifactDirectoryName": "serverless/backend/dev/1683642211421-2023-05-09T14:23:31.421Z",
     "artifact": "backend.zip"
   }
 }

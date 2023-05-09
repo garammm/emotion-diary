@@ -2,6 +2,12 @@ service: backend
 
 frameworkVersion: "3"
 
+layers:
+  commonLibs:
+    path: layer
+    compatibleRuntimes:
+      - nodejs16.x
+
 provider:
   name: aws
   runtime: nodejs16.x
@@ -25,9 +31,3 @@ functions:
           path: /
           method: post
           cors: true
-
-layers:
-  commonLibs:
-    path: layer
-    compatibleRuntimes:
-      - nodejs16.x
