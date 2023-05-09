@@ -1,0 +1,33 @@
+service: backend
+
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+  region: ap-northeast-2
+
+functions:
+  readPost:
+    handler: handler.readPost
+    events:
+      - http:
+          path: /
+          method: get
+          cors: true
+    layers:
+      - { Ref: CommonLibsLambdaLayer }
+
+  uploadPost:
+    handler: handler.uploadPost
+    events:
+      - http:
+          path: /
+          method: post
+          cors: true
+
+layers:
+  commonLibs:
+    path: layer
+    compatibleRuntimes:
+      - nodejs16.x
