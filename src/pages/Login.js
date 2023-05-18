@@ -9,6 +9,8 @@ import { auth } from "../firebase-config";
 import MyButton from "../components/MyButton";
 import { useNavigate } from "react-router-dom";
 import styled from "@emotion/styled";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Login() {
   const [registerEmail, setRegisterEmail] = useState("");
@@ -46,6 +48,7 @@ export default function Login() {
       console.log(user);
     } catch (error) {
       console.log(error.message);
+      toast("이메일과 비밀번호를 다시 확인해주세요");
     }
   };
 
@@ -54,35 +57,55 @@ export default function Login() {
   };
 
   return (
-    <Container>
-      <div>
-        <h3> 로그인</h3>
-        <Label>아이디</Label>
+    <Container className="shadow-lg rounded-xl p-8 w-96 m-auto">
+      <div className="w-full">
+        <h3 className="text-2xl font-bold mb-2">당신의 감정은, 어떠신가요?</h3>
+        <h3 className="text-xl font-bold mb-4 text-gray-500">
+          감정 다이어리 시작하기
+        </h3>
+        <Label className="text-lg font-bold">아이디</Label>
         <input
-          placeholder="Email..."
+          className="w-full outline-none border-b border-gray-300"
+          placeholder="이메일을 입력해주세요"
           onChange={(event) => {
             setLoginEmail(event.target.value);
           }}
         />
         <br></br>
         <br></br>
-        <Label>비번</Label>
+        <Label>비밀번호</Label>
         <input
-          placeholder="Password..."
+          className="w-full outline-none border-b border-gray-300"
+          type="password"
+          placeholder="비밀번호를 입력해주세요"
           onChange={(event) => {
             setLoginPassword(event.target.value);
           }}
         />
       </div>
       <br></br>
-      <MyButton text="로그인" onClick={login} />
-
-      <h3> 회원가입 </h3>
+      <MyButton
+        text="로그인"
+        className="text-xs w-full py-2 rounded-lg bg-green-300 hover:bg-green-500 transition-colors mb-2"
+        onClick={login}
+      />
       {user?.email}
-      <MyButton text={"회원가입"} onClick={() => navigate("/SignUp")} />
-      <h3> 로그 아웃 </h3>
+      <MyButton
+        text={"아직 회원이 아니신가요?"}
+        className="text-xs w-full py-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors mb-2"
+        onClick={() => navigate("/SignUp")}
+      />
       {user?.email}
-      <MyButton text={"로그아웃"} onClick={logout} />
+      <ToastContainer
+        position="bottom-center"
+        type="success"
+        autoClose={3000}
+      />
+      {/* <MyButton
+        className="text-xs w-full py-2 rounded-lg bg-green-300 hover:bg-green-500 transition-colors"
+        text={"로그아웃"}
+        onClick={logout}
+      /> */}
     </Container>
   );
 }

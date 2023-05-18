@@ -1,12 +1,11 @@
 import DiaryEditor from "../components/DiaryEditor";
 
-
 const New = () => {
   return (
-    <div>
-        <DiaryEditor/>
+    <div className="w-full">
+      <DiaryEditor />
     </div>
-  )
+  );
 };
 
 export default New;

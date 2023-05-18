@@ -1,3 +1,6 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 @import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Yeon+Sung&display=swap');
 
 
@@ -41,12 +44,12 @@ body {
 .MyButton {
   cursor: pointer;
   border: none;
-  border-radius: 5px;
+  /* border-radius: 5px;
   padding-top: 10px;
   padding-bottom: 10px;
   padding-left: 20px;
   padding-right: 20px;
-  font-size: 18px;
+  font-size: 18px; */
 
   /* 버튼 안에 있는 글자가 잘려서 두줄이 되지 않게 만들어주는 속성 */
   white-space: nowrap;
@@ -55,13 +58,12 @@ body {
 
 /* header 색깔*/
 .MyButton_default {
-  background-color: #ececec;
+  /* background-color: #ececec; */
   /* background-color: blue; */
-  color:black;
 }
 
 .MyButton_positive {
-  background-color: black;
+  /* background-color: black; */
   color: white;
 }
 
@@ -203,7 +205,6 @@ hedaer button {
 }
 
 .DiaryItem .btn_wrapper {
-  min-width: 70px;
 }
 
 /* DiaryEditor */
@@ -243,6 +244,22 @@ hedaer button {
   gap: 2%;
 }
 
+.DiaryEditor input {
+  /*font-family: "Nanum Pen Script";*/
+  font-size: 20px;
+
+  box-sizing: border-box;
+  width: 100%;
+  resize: vertical;
+  margin-bottom: 1rem;
+
+  border: none;
+  border-radius: 5px;
+  background-color: #ececec;
+
+  padding: 20px;
+}
+
 .DiaryEditor textarea {
   /*font-family: "Nanum Pen Script";*/
   font-size: 20px;
@@ -280,7 +297,7 @@ hedaer button {
 }
 
 .EmotionItem img {
-  width: 50%;
+  max-width: 50px;
   margin-bottom: 10px;
 }
 
@@ -315,3 +332,12 @@ hedaer button {
   color: white; 
 }
 
+.일기_수정_버튼 {
+  width: 80vw;
+  background-color: #efefef;
+  padding: 12px 24px;
+  border-radius: 12px;
+  margin-top: auto;
+  border: 0;
+  bottom: 20px;
+}

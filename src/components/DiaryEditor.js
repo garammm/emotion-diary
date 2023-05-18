@@ -6,32 +6,39 @@ import { useContext, useRef, useState } from "react";
 import { DiaryDispatchContext } from "./../App.js";
 
 import EmotionItem from "./EmotionItem";
+import { createClient } from "@supabase/supabase-js";
+import { auth } from "../firebase-config";
 
-const emotionList = [
+const supabase = createClient(
+  "https://rivtwrqbjelldspdcgew.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJpdnR3cnFiamVsbGRzcGRjZ2V3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODQxODc3MjQsImV4cCI6MTk5OTc2MzcyNH0.km6nIGYqTJfCGmknERU2gVIdt-kpXrIIey5YYm-ixiE"
+);
+
+export const emotionList = [
   {
     emotion_id: 1,
-    emotion_img: process.env.PUBLIC_URL + `/assets/emotion1.png`,
-    emotion_descript: "슬픔",
+    emotion_img: process.env.PUBLIC_URL + `/assets/emotion슬픔.png`,
+    emotion_description: "슬픔",
   },
   {
     emotion_id: 2,
-    emotion_img: process.env.PUBLIC_URL + `/assets/emotion2.png`,
-    emotion_descript: "기쁨",
+    emotion_img: process.env.PUBLIC_URL + `/assets/emotion기쁨.png`,
+    emotion_description: "기쁨",
   },
   {
     emotion_id: 3,
-    emotion_img: process.env.PUBLIC_URL + `/assets/emotion3.png`,
-    emotion_descript: "분노",
+    emotion_img: process.env.PUBLIC_URL + `/assets/emotion분노.png`,
+    emotion_description: "분노",
   },
   {
     emotion_id: 4,
-    emotion_img: process.env.PUBLIC_URL + `/assets/emotion4.png`,
-    emotion_descript: "불안",
+    emotion_img: process.env.PUBLIC_URL + `/assets/emotion불안.png`,
+    emotion_description: "불안",
   },
   {
     emotion_id: 5,
-    emotion_img: process.env.PUBLIC_URL + `/assets/emotion5.png`,
-    emotion_descript: "놀람",
+    emotion_img: process.env.PUBLIC_URL + `/assets/emotion놀람.png`,
+    emotion_description: "놀람",
   },
 ];
 
@@ -57,11 +64,13 @@ const getStringDate = (date) => {
   return `${year}-${month}-${day}`;
 };
 
-const DiaryEditor = () => {
+const DiaryEditor = ({ isEdit, originData }) => {
   const contentRef = useRef();
+  const titleRef = useRef();
 
   const [date, setDate] = useState(getStringDate(new Date()));
   const [emotion, setEmotion] = useState(3);
+  const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
   const { onCreate } = useContext(DiaryDispatchContext);
@@ -72,17 +81,29 @@ const DiaryEditor = () => {
 
   const navigate = useNavigate();
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (content.length < 1) {
       contentRef.current.focus();
       return;
     }
-    onCreate(date, content, emotion);
+    if (
+      window.confirm(
+        isEdit ? "일기를 수정하시겠습니까?" : "새로운 일기를 작성하시겠습니까?"
+      )
+    ) {
+      if (!isEdit) {
+        onCreate(date, content, emotion);
+      } else {
+        // onEdit(originData.id, date, content, emotion);
+      }
+    }
+    const email = auth.currentUser.email;
+    await supabase.from("diary").insert({ title, content, emotion, email });
     navigate("/Home", { replace: true });
   };
 
   return (
-    <div className="DiaryEditor">
+    <div className="DiaryEditor w-full">
       <MyHearder
         headText={"새 일기쓰기"}
         leftChild={
@@ -109,15 +130,23 @@ const DiaryEditor = () => {
             {emotionList.map((it) => (
               <EmotionItem
                 key={it.emotion_id}
-                {...it}
                 onClick={handleClickEmotion}
-                isSelected={it.emotion_id === emotion}
+                isSelected={it.emotion_description === emotion}
+                {...it}
               />
             ))}
           </div>
         </section>
         <section>
           <h4>오늘의 일기</h4>
+          <div className="input_box_text_wrapper">
+            <input
+              placeholder="제목"
+              ref={titleRef}
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+          </div>
           <div className="input_box_text_wrapper">
             <textarea
               placeholder="오늘은 어땠나요"
@@ -128,9 +157,10 @@ const DiaryEditor = () => {
           </div>
         </section>
         <section>
-          <div className="control_box">
+          <div className="control_box flex flex-col">
             <MyButton
               text={"감정분석하기"}
+              className="bg-teal-700 hover:bg-teal-800 transition-colors text-white rounded-lg py-2 px-4 w-full mb-2"
               onClick={() => {
                 navigate("/Emotion ");
               }}
@@ -138,6 +168,7 @@ const DiaryEditor = () => {
             <MyButton
               text={"작성하기"}
               type={"positive"}
+              className="bg-emerald-500 hover:bg-emerald-600 transition-colors text-white rounded-lg py-2 px-4 w-full"
               onClick={handleSubmit}
             />
           </div>

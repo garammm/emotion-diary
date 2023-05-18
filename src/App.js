@@ -1,7 +1,6 @@
 import React, { useReducer, useRef } from "react";
 import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-
 import Home from "./pages/Home";
 import New from "./pages/New";
 import Edit from "./pages/Edit";
@@ -10,6 +9,7 @@ import Login from "./pages/Login";
 import Emotion from "./pages/Emotion";
 import sign_up from "./pages/SignUp";
 import SignUp from "./pages/SignUp";
+import { auth } from "./firebase-config";
 
 const reducer = (state, action) => {
   let newState = [];
@@ -120,14 +120,28 @@ function App() {
         }}
       >
         <BrowserRouter>
-          <div className="App">
+          <div className="App flex">
             <Routes>
               <Route path="/Home" element={<Home />}></Route>
               <Route path="/new" element={<New />}></Route>
-              <Route path="/edit" element={<Edit />}></Route>
+              <Route path="/edit/:id" element={<Edit />} />
               <Route path="/diary/:id" element={<Diary />}></Route>
-              <Route path="/" element={<Login />}></Route>
-              <Route path="/signUp" element={<SignUp />}></Route>
+              <Route
+                path="/"
+                element={
+                  <div className="flex h-full m-auto justify-center items-center">
+                    <Login />
+                  </div>
+                }
+              ></Route>
+              <Route
+                path="/signUp"
+                element={
+                  <div className="flex h-full m-auto justify-center items-center">
+                    <SignUp />
+                  </div>
+                }
+              ></Route>
               <Route path="/Emotion" element={<Emotion />}></Route>
             </Routes>
           </div>

@@ -1,19 +1,19 @@
 import { useNavigate } from "react-router-dom";
 import MyButton from "./MyButton";
 
-const DiaryItem = ({ id, emotion, content, date }) => {
-  const strDate = new Date(parseInt(date)).toLocaleString();
+const DiaryItem = ({ id, emotion, title, content, created_at }) => {
+  const strDate = new Date(created_at).toLocaleString();
 
   const navigate = useNavigate();
 
   const goDetail = () => {
-    navigate(`/diary/${id}`)
-  }
+    navigate(`/diary/${id}`);
+  };
 
   return (
     <div className="DiaryItem">
       <div
-      onClick={goDetail}
+        onClick={goDetail}
         className={[
           "emotion_img_wrapper",
           `emotion_img_wrapper_${emotion}`,
@@ -25,8 +25,11 @@ const DiaryItem = ({ id, emotion, content, date }) => {
         <div className="diary_date">{strDate}</div>
         <div className="diray_content_prview">{content.slice(0, 25)}</div>
       </div>
-      <div className="btn_wrapper">
-        <MyButton text={'수정하기'}/>
+      <div className="btn_wrapper flex items-center">
+        <MyButton
+          text={"수정하기"}
+          className="bg-emerald-500 hover:bg-emerald-600 transition-colors py-2 px-4 rounded-lg my-auto text-white"
+        />
       </div>
     </div>
   );
