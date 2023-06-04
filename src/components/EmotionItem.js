@@ -3,6 +3,7 @@ const EmotionItem = ({
   emotion_img,
   emotion_description,
   onClick,
+  className,
   isSelected,
 }) => {
   return (
@@ -10,6 +11,7 @@ const EmotionItem = ({
       onClick={() => onClick(emotion_description)}
       className={[
         "EmotionItem",
+        className,
         isSelected ? `EmotionItem_on_${emotion_id}` : `EmotionItem_off`,
       ].join(" ")}
     >

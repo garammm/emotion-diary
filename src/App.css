@@ -214,7 +214,6 @@ hedaer button {
 }
 
 .DiaryEditor section {
-  margin-bottom: 40px;
 }
 
 .DiaryEditor h4 {
@@ -289,7 +288,6 @@ hedaer button {
   padding-top: 20px;
   padding-bottom: 20px;
 
-  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;

@@ -8,6 +8,7 @@ import { DiaryDispatchContext } from "./../App.js";
 import EmotionItem from "./EmotionItem";
 import { createClient } from "@supabase/supabase-js";
 import { auth } from "../firebase-config";
+import Emotion from "./Emotion";
 
 const supabase = createClient(
   "https://rivtwrqbjelldspdcgew.supabase.co",
@@ -68,8 +69,9 @@ const DiaryEditor = ({ isEdit, originData }) => {
   const contentRef = useRef();
   const titleRef = useRef();
 
+  const [isEmotionOpen, setIsEmotionOpen] = useState(false);
   const [date, setDate] = useState(getStringDate(new Date()));
-  const [emotion, setEmotion] = useState(3);
+  const [emotion, setEmotion] = useState();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
@@ -112,7 +114,7 @@ const DiaryEditor = ({ isEdit, originData }) => {
       />
       <div>
         <section>
-          <h4>오늘은 언제인가요?</h4>
+          <h4 className="mb-4 mt-6">오늘은 언제인가요?</h4>
           <div className="input_box">
             <input
               className="input_date"
@@ -125,20 +127,13 @@ const DiaryEditor = ({ isEdit, originData }) => {
           </div>
         </section>
         <section>
-          <h4>오늘의 감정</h4>
-          <div className="input_box emotion_list_wrapper">
-            {emotionList.map((it) => (
-              <EmotionItem
-                key={it.emotion_id}
-                onClick={handleClickEmotion}
-                isSelected={it.emotion_description === emotion}
-                {...it}
-              />
-            ))}
+          <div className="mb-4">
+            {!emotion ? (
+              <h4>오늘의 일기</h4>
+            ) : (
+              <h4>오늘의 일기 (분석된 감정 : {emotion})</h4>
+            )}
           </div>
-        </section>
-        <section>
-          <h4>오늘의 일기</h4>
           <div className="input_box_text_wrapper">
             <input
               placeholder="제목"
@@ -147,7 +142,7 @@ const DiaryEditor = ({ isEdit, originData }) => {
               onChange={(e) => setTitle(e.target.value)}
             />
           </div>
-          <div className="input_box_text_wrapper">
+          <div className="input_box_text_wrapper mb-4">
             <textarea
               placeholder="오늘은 어땠나요"
               ref={contentRef}
@@ -162,7 +157,7 @@ const DiaryEditor = ({ isEdit, originData }) => {
               text={"감정분석하기"}
               className="bg-teal-700 hover:bg-teal-800 transition-colors text-white rounded-lg py-2 px-4 w-full mb-2"
               onClick={() => {
-                navigate("/Emotion ");
+                setIsEmotionOpen(() => true);
               }}
             />
             <MyButton
@@ -174,6 +169,13 @@ const DiaryEditor = ({ isEdit, originData }) => {
           </div>
         </section>
       </div>
+      {isEmotionOpen && (
+        <Emotion
+          updateEmotion={(value) => setEmotion(value)}
+          content={content}
+          closeEmotion={() => setIsEmotionOpen(() => false)}
+        />
+      )}
     </div>
   );
 };
