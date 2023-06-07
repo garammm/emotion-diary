@@ -46,9 +46,6 @@ const Diary = () => {
       <div className="p-4 border border-gray-200 rounded-xl mb-4 whitespace-pre-line">
         {diary?.content}
       </div>
-      <button class="w-full mb-2 rounded-lg py-2 px-4 bg-teal-600 hover:bg-teal-700 transition-colors text-white font-semibold">
-        일기 수정하기
-      </button>
       <button
         onClick={() => navigate(-1)}
         class="w-full rounded-lg py-2 px-4 bg-teal-800 hover:bg-teal-800 transition-colors text-white font-semibold"

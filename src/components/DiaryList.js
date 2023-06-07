@@ -91,7 +91,7 @@ const DiaryList = ({ diaryList }) => {
           <MyButton
             type={"positive"}
             text={"새 일기쓰기"}
-            className="bg-emerald-500 rounded-lg h-full py-2"
+            className="black rounded-lg h-full py-2"
             onClick={() => navigate("/New")}
           />
         </div>

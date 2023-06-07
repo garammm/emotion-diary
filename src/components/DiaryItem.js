@@ -25,12 +25,7 @@ const DiaryItem = ({ id, emotion, title, content, created_at }) => {
         <div className="diary_date">{strDate}</div>
         <div className="diray_content_prview">{content.slice(0, 25)}</div>
       </div>
-      <div className="btn_wrapper flex items-center">
-        <MyButton
-          text={"수정하기"}
-          className="bg-emerald-500 hover:bg-emerald-600 transition-colors py-2 px-4 rounded-lg my-auto text-white"
-        />
-      </div>
+      <div className="btn_wrapper flex items-center"></div>
     </div>
   );
 };
