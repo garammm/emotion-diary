@@ -23,7 +23,7 @@ const DiaryItem = ({ id, emotion, title, content, created_at }) => {
       </div>
       <div className="info_wrapper" onClick={goDetail}>
         <div className="diary_date">{strDate}</div>
-        <div className="diray_content_prview">{content.slice(0, 25)}</div>
+        <div className="diray_content_prview">{content.slice(0, 35)}</div>
       </div>
       <div className="btn_wrapper flex items-center"></div>
     </div>
