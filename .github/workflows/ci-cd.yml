@@ -1,0 +1,252 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  REGISTRY: docker.io
+  BACKEND_IMAGE_NAME: emotion-diary-backend
+  FRONTEND_IMAGE_NAME: emotion-diary-frontend
+
+jobs:
+  # Backend Tests
+  backend-test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_PASSWORD: postgres123
+          POSTGRES_USER: postgres
+          POSTGRES_DB: emotion_diary_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('backend_python/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - name: Install dependencies
+      run: |
+        cd backend_python
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest pytest-asyncio httpx
+
+    - name: Run tests
+      env:
+        DATABASE_URL: postgresql://postgres:postgres123@localhost:5432/emotion_diary_test
+        SECRET_KEY: test-secret-key
+        ALGORITHM: HS256
+        ACCESS_TOKEN_EXPIRE_MINUTES: 30
+        DEBUG: true
+      run: |
+        cd backend_python
+        python -m pytest tests/ -v --tb=short
+
+    - name: Lint with flake8
+      run: |
+        cd backend_python
+        pip install flake8
+        flake8 app/ --count --select=E9,F63,F7,F82 --show-source --statistics
+        flake8 app/ --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+  # Frontend Tests
+  frontend-test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'yarn'
+
+    - name: Install dependencies
+      run: yarn install --frozen-lockfile
+
+    - name: Run tests
+      run: yarn test --coverage --watchAll=false
+
+    - name: Build frontend
+      run: yarn build
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: frontend-build
+        path: build/
+
+  # Security Scan
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+
+    - name: Upload Trivy scan results to GitHub Security tab
+      uses: github/codeql-action/upload-sarif@v2
+      if: always()
+      with:
+        sarif_file: 'trivy-results.sarif'
+
+  # Build and Push Images
+  build-and-push:
+    needs: [backend-test, frontend-test, security-scan]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Extract metadata for backend
+      id: meta-backend
+      uses: docker/metadata-action@v5
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.BACKEND_IMAGE_NAME }}
+        tags: |
+          type=ref,event=branch
+          type=ref,event=pr
+          type=sha,prefix={{branch}}-
+          type=raw,value=latest,enable={{is_default_branch}}
+
+    - name: Build and push backend image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./backend_python
+        file: ./backend_python/Dockerfile
+        push: true
+        tags: ${{ steps.meta-backend.outputs.tags }}
+        labels: ${{ steps.meta-backend.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+    - name: Extract metadata for frontend
+      id: meta-frontend
+      uses: docker/metadata-action@v5
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.FRONTEND_IMAGE_NAME }}
+        tags: |
+          type=ref,event=branch
+          type=ref,event=pr
+          type=sha,prefix={{branch}}-
+          type=raw,value=latest,enable={{is_default_branch}}
+
+    - name: Build and push frontend image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: ./Dockerfile
+        push: true
+        tags: ${{ steps.meta-frontend.outputs.tags }}
+        labels: ${{ steps.meta-frontend.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+  # Deploy to Kubernetes
+  deploy:
+    needs: [build-and-push]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    environment: production
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Configure kubectl
+      uses: azure/k8s-set-context@v3
+      with:
+        method: kubeconfig
+        kubeconfig: ${{ secrets.KUBE_CONFIG }}
+
+    - name: Update image tags in manifests
+      run: |
+        # Update backend image
+        sed -i "s|image: emotion-diary-backend:latest|image: ${{ env.REGISTRY }}/${{ env.BACKEND_IMAGE_NAME }}:${{ github.sha }}|g" k8s/02-backend.yaml
+        # Update frontend image  
+        sed -i "s|image: emotion-diary-frontend:latest|image: ${{ env.REGISTRY }}/${{ env.FRONTEND_IMAGE_NAME }}:${{ github.sha }}|g" k8s/03-frontend.yaml
+
+    - name: Deploy to Kubernetes
+      run: |
+        kubectl apply -f k8s/00-namespace-config.yaml
+        kubectl apply -f k8s/01-postgres.yaml
+        kubectl apply -f k8s/05-redis.yaml
+        
+        # Wait for database to be ready
+        kubectl wait --for=condition=ready pod -l app=postgres -n emotion-diary --timeout=300s
+        
+        # Deploy backend and frontend
+        kubectl apply -f k8s/02-backend.yaml
+        kubectl apply -f k8s/03-frontend.yaml
+        kubectl apply -f k8s/04-ingress.yaml
+        
+        # Wait for deployments to complete
+        kubectl rollout status deployment/backend -n emotion-diary --timeout=300s
+        kubectl rollout status deployment/frontend -n emotion-diary --timeout=300s
+
+    - name: Verify deployment
+      run: |
+        kubectl get pods -n emotion-diary
+        kubectl get services -n emotion-diary
+        kubectl get ingress -n emotion-diary
+
+  # Notification
+  notify:
+    needs: [deploy]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+    - name: Notify deployment status
+      uses: 8398a7/action-slack@v3
+      if: always()
+      with:
+        status: ${{ job.status }}
+        text: |
+          Deployment Status: ${{ job.status }}
+          Commit: ${{ github.sha }}
+          Branch: ${{ github.ref }}
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

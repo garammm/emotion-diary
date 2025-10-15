@@ -1,0 +1,18 @@
+2025-10-15 17:16:24.437 | INFO     | app.main:<module>:87 - Emotion Diary API initialized successfully
+2025-10-15 17:20:02.817 | INFO     | app.main:<module>:87 - Emotion Diary API initialized successfully
+2025-10-15 17:20:59.924 | INFO     | app.middleware:dispatch:19 - [6106907b] GET http://localhost:8000/docs?id=7fc179dd-c836-421f-afb3-e4a936754b99&vscodeBrowserReqId=1760516459587 - Client: 127.0.0.1
+2025-10-15 17:20:59.925 | INFO     | app.middleware:dispatch:29 - [6106907b] GET http://localhost:8000/docs?id=7fc179dd-c836-421f-afb3-e4a936754b99&vscodeBrowserReqId=1760516459587 - Status: 404 - Time: 0.0010s
+2025-10-15 17:23:40.978 | INFO     | app.main:<module>:87 - Emotion Diary API initialized successfully
+2025-10-15 17:24:14.883 | INFO     | app.middleware:dispatch:19 - [69a3b84d] GET http://localhost:8000/api/docs?id=947fefbc-bb9c-4df6-b7b5-3e941e999604&vscodeBrowserReqId=1760516654554 - Client: 127.0.0.1
+2025-10-15 17:24:14.891 | INFO     | app.middleware:dispatch:29 - [69a3b84d] GET http://localhost:8000/api/docs?id=947fefbc-bb9c-4df6-b7b5-3e941e999604&vscodeBrowserReqId=1760516654554 - Status: 200 - Time: 0.0079s
+2025-10-15 17:24:15.107 | INFO     | app.middleware:dispatch:19 - [f449513e] GET http://localhost:8000/openapi.json - Client: 127.0.0.1
+2025-10-15 17:24:15.127 | INFO     | app.middleware:dispatch:29 - [f449513e] GET http://localhost:8000/openapi.json - Status: 200 - Time: 0.0202s
+2025-10-15 17:26:58.509 | INFO     | app.main:<module>:87 - Emotion Diary API initialized successfully
+2025-10-15 17:27:02.608 | INFO     | app.middleware:dispatch:19 - [76fc4847] POST http://localhost:8000/api/emotions/analyze - Client: 127.0.0.1
+2025-10-15 17:27:02.609 | ERROR    | app.exceptions:http_exception_handler:17 - [unknown] HTTP Exception: 401 - Not authenticated - URL: http://localhost:8000/api/emotions/analyze
+2025-10-15 17:27:02.610 | INFO     | app.middleware:dispatch:29 - [76fc4847] POST http://localhost:8000/api/emotions/analyze - Status: 401 - Time: 0.0018s
+2025-10-15 17:28:17.500 | INFO     | app.main:<module>:87 - Emotion Diary API initialized successfully
+2025-10-15 17:38:02.514 | INFO     | app.main:<module>:87 - Emotion Diary API initialized successfully
+2025-10-15 17:41:40.360 | INFO     | app.main:<module>:87 - Emotion Diary API initialized successfully
+2025-10-15 17:43:22.339 | INFO     | app.main:<module>:87 - Emotion Diary API initialized successfully
+2025-10-15 17:44:44.102 | INFO     | app.main:<module>:87 - Emotion Diary API initialized successfully

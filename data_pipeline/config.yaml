@@ -1,0 +1,71 @@
+# 감정 분석 데이터 수집 설정
+
+# 네이버 카페 설정
+naver_cafe:
+  - cafe_id: "29842958"    # 예시 카페 ID
+    board_id: "1"          # 게시판 ID  
+    max_pages: 10          # 크롤링할 페이지 수
+    name: "일상_카페"
+
+  - cafe_id: "12345678"    
+    board_id: "2"          
+    max_pages: 5           
+    name: "감정_일기_카페"
+
+# 디시인사이드 갤러리 설정
+dcinside:
+  galleries:
+    - "humor"              # 유머 갤러리
+    - "hit"                # 힛갤
+    - "comic_new1"         # 만화 갤러리
+  max_pages: 10
+
+# 블로그 검색 키워드
+blog:
+  keywords:
+    # 감정 키워드
+    - "우울한 하루"
+    - "기쁜 일"  
+    - "화나는 일"
+    - "슬픈 이야기"
+    - "행복한 순간"
+    - "스트레스"
+    - "감정 일기"
+    - "힘든 하루"
+    - "즐거운 경험"
+    - "무서운 경험"
+    
+    # 상황별 키워드  
+    - "직장 스트레스"
+    - "연애 고민"
+    - "가족 문제"
+    - "친구 관계"
+    - "취업 고민"
+    - "학업 스트레스"
+    
+  max_posts: 100
+
+# 뉴스 댓글 (현재 구현되지 않음)
+news:
+  enabled: false
+  sources:
+    - "naver_news"
+    - "daum_news"
+
+# 크롤링 설정
+crawling:
+  delay_range: [1, 3]      # 요청 간 지연 시간 (초)
+  max_retries: 3           # 최대 재시도 횟수
+  timeout: 30              # 타임아웃 (초)
+  
+# 데이터 필터링
+filtering:
+  min_length: 10           # 최소 텍스트 길이
+  max_length: 1000         # 최대 텍스트 길이
+  remove_duplicates: true  # 중복 제거
+  
+# 출력 설정
+output:
+  format: "csv"            # 출력 형식 (csv, json)
+  encoding: "utf-8-sig"    # 인코딩
+  include_metadata: true   # 메타데이터 포함

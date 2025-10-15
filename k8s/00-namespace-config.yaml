@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: emotion-diary
+  labels:
+    name: emotion-diary
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: emotion-diary-secrets
+  namespace: emotion-diary
+type: Opaque
+data:
+  # base64 encoded values
+  # echo -n 'postgres123' | base64
+  postgres-password: cG9zdGdyZXMxMjM=
+  # echo -n 'your-super-secret-jwt-key-change-in-production' | base64
+  jwt-secret: eW91ci1zdXBlci1zZWNyZXQtand0LWtleS1jaGFuZ2UtaW4tcHJvZHVjdGlvbg==
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: emotion-diary-config
+  namespace: emotion-diary
+data:
+  POSTGRES_DB: emotion_diary
+  POSTGRES_USER: postgres
+  ALGORITHM: HS256
+  ACCESS_TOKEN_EXPIRE_MINUTES: "30"
+  DEBUG: "false"
