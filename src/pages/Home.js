@@ -63,6 +63,12 @@ const Home = () => {
 
   return (
     <div className="w-full">
+      <div className="text-center p-4 bg-blue-100 mb-4">
+        <h1 className="text-2xl font-bold text-blue-800">
+          🚀 CI/CD 파이프라인 테스트 - v1.0
+        </h1>
+        <p className="text-blue-600">GitHub Actions → ArgoCD 자동 배포</p>
+      </div>
       <MyHeader
         headText={headText}
         leftChild={<MyButton text={"<"} onClick={decreaseMonth} />}
